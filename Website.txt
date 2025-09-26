@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dana Valdez Photography - Life's Milestones</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import for a professional look */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        /* Ensure image dimensions are handled gracefully */
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition */
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05) rotateZ(0.5deg); /* Added subtle rotation for liveliness */
+        }
+
+        /* Simple animation for the hero text */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-text {
+            animation: fadeIn 1s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+
+        .service-card:hover {
+            /* Shadow adjusted to look good on a light background */
+            box-shadow: 0 10px 15px -3px rgba(217, 164, 0, 0.4), 0 4px 6px -2px rgba(217, 164, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Styles for the Custom Success Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+    </style>
+    <!-- Tailwind Configuration for custom colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-light': '#fefefe', // Very light background
+                        'secondary-bg': '#f0f0f0', // Slightly darker section background
+                        'dark-text': '#222222',    // Main text color
+                        'accent-gold': '#d9a400',  // Accent color
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-primary-light text-dark-text">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-white bg-opacity-95 shadow-xl backdrop-blur-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- LOGO: Using the elegant script logo -->
+            <a href="#home" class="transition duration-300">
+                <img src="Black Elegant Professional Lettering Name Logo (1).png" 
+                     alt="Dana Valdez Photography Script Logo" 
+                     class="h-12 w-auto shadow-md rounded-lg hover:opacity-90 transition duration-300"
+                     onerror="this.outerHTML='<span class=\'text-3xl font-extrabold text-accent-gold tracking-widest\'>Dana Valdez Photography</span>'">
+            </a>
+            <div class="hidden md:flex space-x-8 text-lg text-gray-700">
+                <a href="#portfolio" class="hover:text-accent-gold transition duration-200">Portfolio</a>
+                <a href="#services" class="hover:text-accent-gold transition duration-200">Services</a>
+                <a href="#about" class="hover:text-accent-gold transition duration-200">About</a>
+                <a href="#testimonials" class="hover:text-accent-gold transition duration-200">Testimonials</a> 
+                <a href="#contact" class="hover:text-accent-gold transition duration-200">Contact</a>
+            </div>
+            <!-- Mobile Menu Button (Hamburger) -->
+            <button class="md:hidden text-2xl text-dark-text" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden absolute w-full bg-white bg-opacity-95 shadow-xl transition-all duration-300 border-t border-gray-100">
+            <div class="flex flex-col items-center py-4 space-y-4 text-lg text-gray-700">
+                <a href="#portfolio" class="w-full text-center py-2 hover:bg-gray-100 transition duration-200" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Portfolio</a>
+                <a href="#services" class="w-full text-center py-2 hover:bg-gray-100 transition duration-200" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Services</a>
+                <a href="#about" class="w-full text-center py-2 hover:bg-gray-100 transition duration-200" onclick="document.getElementById('mobile-menu').classList.add('hidden')">About</a>
+                <a href="#testimonials" class="w-full text-center py-2 hover:bg-gray-100 transition duration-200" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Testimonials</a> 
+                <a href="#contact" class="w-full text-center py-2 hover:bg-gray-100 transition duration-200" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. Hero Section -->
+        <section id="home" class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+            <!-- Background Image -->
+            <!-- Image placeholder updated to suggest a light/bright image that will still contrast against white text -->
+            <img src="https://placehold.co/1920x1080/707070/ffffff?text=BRIGHT+LIFESTYLE+PORTRAIT+BACKGROUND" 
+                 alt="Elegant Photography Background" 
+                 class="absolute inset-0 w-full h-full object-cover opacity-60" 
+                 onerror="this.style.display='none'; this.closest('section').style.backgroundColor='#555'">
+            
+            <!-- Dark overlay to ensure white text pops on a light image -->
+            <div class="absolute inset-0 bg-dark-text opacity-40"></div>
+
+            <div class="relative z-10 p-6 max-w-4xl mx-auto">
+                <h1 class="hero-text text-6xl md:text-8xl font-black mb-4 text-white leading-tight">
+                    <span class="text-accent-gold">Life's Milestones,</span> Captured.
+                </h1>
+                <p class="hero-text text-xl md:text-2xl mb-8 text-gray-200 max-w-2xl mx-auto">
+                    Specializing in **Family, Portrait, Maternity, and Graduation** photography. We preserve your most cherished life chapters with warmth and artistry.
+                </p>
+                <!-- Added dedicated Booking Link below Portfolio -->
+                <a href="#contact" class="hero-text inline-block px-10 py-4 text-lg font-semibold bg-accent-gold text-dark-text rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105 cursor-pointer">
+                    Book Your Session Now
+                </a>
+            </div>
+        </section>
+
+        <!-- 2. Portfolio/Gallery Section -->
+        <section id="portfolio" class="py-20 px-4 md:px-12 bg-white">
+            <div class="container mx-auto">
+                <h2 class="text-5xl font-extrabold text-center mb-4 text-dark-text">Featured <span class="text-accent-gold">Portraits</span></h2>
+                <p class="text-center text-xl text-gray-600 mb-12">Showcasing the heartfelt connections and proud moments of our clients.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Gallery Item 1 - Family -->
+                    <div class="gallery-item overflow-hidden rounded-xl shadow-lg h-80 cursor-pointer border border-gray-200">
+                        <img src="https://placehold.co/800x600/b0b0b0/ffffff?text=FAMILY+PORTRAIT" 
+                             alt="Family Photography" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <!-- Gallery Item 2 - Maternity -->
+                    <div class="gallery-item overflow-hidden rounded-xl shadow-lg h-80 cursor-pointer border border-gray-200">
+                        <img src="https://placehold.co/800x600/c0c0c0/ffffff?text=MATERNITY+SHOOT" 
+                             alt="Maternity Photography" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <!-- Gallery Item 3 - Graduation -->
+                    <div class="gallery-item overflow-hidden rounded-xl shadow-lg h-80 cursor-pointer border border-gray-200">
+                        <img src="https://placehold.co/800x600/d0d0d0/ffffff?text=GRADUATION+SENIOR" 
+                             alt="Graduation Photography" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <!-- Gallery Item 4 - Portrait -->
+                    <div class="gallery-item overflow-hidden rounded-xl shadow-lg h-80 cursor-pointer border border-gray-200">
+                        <img src="https://placehold.co/800x600/e0e0e0/ffffff?text=INDIVIDUAL+PORTRAIT" 
+                             alt="Individual Portrait" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <!-- Gallery Item 5 - Family -->
+                    <div class="gallery-item overflow-hidden rounded-xl shadow-lg h-80 cursor-pointer border border-gray-200">
+                        <img src="https://placehold.co/800x600/f0f0f0/222222?text=LIFESTYLE+FAMILY" 
+                             alt="Lifestyle Family" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <!-- Gallery Item 6 - Maternity -->
+                    <div class="gallery-item overflow-hidden rounded-xl shadow-lg h-80 cursor-pointer border border-gray-200">
+                        <img src="https://placehold.co/800x600/d9d9d9/222222?text=NEWBORN+SESSION" 
+                             alt="Newborn Photography" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <!-- Gallery Item 7 - Graduation -->
+                    <div class="gallery-item overflow-hidden rounded-xl shadow-lg h-80 cursor-pointer border border-gray-200">
+                        <img src="https://placehold.co/800x600/c9c9c9/222222?text=SENIOR+PORTRAITS" 
+                             alt="Senior Portraits" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <!-- Gallery Item 8 - Portrait -->
+                    <div class="gallery-item overflow-hidden rounded-xl shadow-lg h-80 cursor-pointer border border-gray-200">
+                        <img src="https://placehold.co/800x600/b9b9b9/222222?text=PROFESSIONAL+HEADSHOTS" 
+                             alt="Professional Headshots" 
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Services Section -->
+        <section id="services" class="py-20 bg-secondary-bg px-4 md:px-12">
+            <div class="container mx-auto">
+                <h2 class="text-5xl font-extrabold text-center mb-4 text-dark-text">Our <span class="text-accent-gold">Specialties</span></h2>
+                <p class="text-center text-xl text-gray-600 mb-12">Focused expertise on life's most beautiful milestones.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Service Card 1: Family & Portraits -->
+                    <div class="service-card bg-white p-8 rounded-xl shadow-xl transition duration-300 hover:shadow-accent-gold/50 cursor-pointer border border-gray-200">
+                        <div class="text-accent-gold mb-4">
+                            <!-- Icon for People/Portraits -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.25a7.5 7.5 0 0114.998 0H4.501z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4 text-dark-text">Family & Portrait Sessions</h3>
+                        <p class="text-gray-600">Capturing genuine connections, from candid family moments to professional headshots. Packages for lifestyle, engagement, and artistic individual portraiture.</p>
+                    </div>
+
+                    <!-- Service Card 2: Maternity & Newborn -->
+                    <div class="service-card bg-white p-8 rounded-xl shadow-xl transition duration-300 hover:shadow-accent-gold/50 cursor-pointer border border-gray-200">
+                        <div class="text-accent-gold mb-4">
+                            <!-- Icon for Heart/Maternity -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4 text-dark-text">Maternity & Newborn Artistry</h3>
+                        <p class="text-gray-600">Celebrating the journey into parenthood with stylized, gentle studio sessions for newborns and elegant, glowing outdoor maternity shoots.</p>
+                    </div>
+
+                    <!-- Service Card 3: Graduation & Senior -->
+                    <div class="service-card bg-white p-8 rounded-xl shadow-xl transition duration-300 hover:shadow-accent-gold/50 cursor-pointer border border-gray-200">
+                        <div class="text-accent-gold mb-4">
+                             <!-- Icon for Graduation/Education (book icon) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21l-8-5v-10l8 5 8-5v10l-8 5zM3.75 6.75l8.25 5.25 8.25-5.25m-16.5-3.75L12 12l8.25-5.25V4.5L12 9.75 3.75 4.5v2.25z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4 text-dark-text">Graduation & Senior Milestones</h3>
+                        <p class="text-gray-600">Highlighting your academic achievements with dynamic senior and graduation portraits. Includes cap and gown, location shoots, and bespoke print designs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. About Section -->
+        <section id="about" class="py-20 px-4 md:px-12 bg-white">
+            <div class="container mx-auto max-w-5xl">
+                <h2 class="text-5xl font-extrabold text-center mb-4 text-dark-text">Our <span class="text-accent-gold">Philosophy</span></h2>
+                <div class="md:flex md:space-x-12 items-center">
+                    <div class="md:w-1/2 mb-6 md:mb-0">
+                        <img src="https://placehold.co/800x600/f0f0f0/d9a400?text=TEAM+PHOTO" 
+                             alt="Team Profile Photo" 
+                             class="rounded-xl shadow-xl w-full border border-gray-200" 
+                             onerror="this.style.backgroundColor='#ccc'">
+                    </div>
+                    <div class="md:w-1/2">
+                        <p class="text-xl leading-relaxed mb-6 text-gray-700">
+                            Founded by **Dana Valdez**, Dana Valdez Photography is built on the belief that the best photos are the ones that feel authentic. We combine technical excellence with a personal approach, ensuring every client feels comfortable and every shot is genuine.
+                        </p>
+                        <p class="text-xl leading-relaxed text-gray-700">
+                            Our style is **warm, emotive, and naturally lit**. We focus exclusively on the beauty of human connection and personal achievements, dedicated to delivering images that become family heirlooms.
+                        </p>
+                        <a href="#contact" class="mt-6 inline-block text-accent-gold text-lg font-semibold hover:text-dark-text transition duration-300 border-b border-accent-gold pb-1 cursor-pointer">
+                            Meet Dana &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Testimonials Section - UPDATED CONTENT -->
+        <section id="testimonials" class="py-20 bg-secondary-bg px-4 md:px-12">
+            <div class="container mx-auto">
+                <h2 class="text-5xl font-extrabold text-center mb-4 text-dark-text">Client <span class="text-accent-gold">Raves</span></h2>
+                <p class="text-center text-xl text-gray-600 mb-12">Hear what our amazing clients have to say about their experience.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Review 1 - Family Focus -->
+                    <div class="bg-white p-8 rounded-xl shadow-xl border-t-4 border-accent-gold transform hover:scale-[1.03] transition duration-300 cursor-pointer border border-gray-200">
+                        <p class="text-lg italic text-gray-700 mb-4">"The family session was fun and relaxed. Dana Valdez captured my kids' genuine personalities—no forced smiles! These are the memories we'll treasure forever."</p>
+                        <p class="text-accent-gold font-bold">- Sarah K., Family Client</p>
+                    </div>
+                    <!-- Review 2 - Graduation Focus -->
+                    <div class="bg-white p-8 rounded-xl shadow-xl border-t-4 border-accent-gold transform hover:scale-[1.03] transition duration-300 cursor-pointer border border-gray-200">
+                        <p class="text-lg italic text-gray-700 mb-4">"My senior portraits turned out incredible! They knew all the best spots on campus and made me feel so confident. Truly the best way to celebrate graduation."</p>
+                        <p class="text-accent-gold font-bold">- Alex V., Graduation Senior</p>
+                    </div>
+                    <!-- Review 3 - Maternity Focus -->
+                    <div class="bg-white p-8 rounded-xl shadow-xl border-t-4 border-accent-gold transform hover:scale-[1.03] transition duration-300 cursor-pointer border border-gray-200">
+                        <p class="text-lg italic text-gray-700 mb-4">"The maternity shoot was elegant and comfortable. They perfectly highlighted the beauty of this special time. We can't wait to book the newborn session!"</p>
+                        <p class="text-accent-gold font-bold">- Maya C., Maternity Client</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Contact/Scheduling Section -->
+        <section id="contact" class="py-20 bg-white px-4 md:px-12">
+            <div class="container mx-auto max-w-4xl">
+                <h2 class="text-5xl font-extrabold text-center mb-4 text-dark-text">Request Your <span class="text-accent-gold">Booking</span></h2>
+                <p class="text-center text-xl text-gray-600 mb-8">
+                    Use the form below to submit a **session request** with your preferred date.
+                    For instant scheduling and live availability, you can use our direct booking tool:
+                </p>
+
+                <!-- Dedicated Booking Link (Placeholder for Calendly/Acuity) -->
+                <div class="text-center mb-12">
+                    <a href="#" target="_blank" 
+                       class="inline-block px-8 py-4 text-xl font-bold bg-dark-text text-white rounded-xl shadow-lg hover:bg-gray-800 transition duration-300 transform hover:scale-[1.03] cursor-pointer border border-accent-gold">
+                        Instant Booking Link (External Scheduler) &rarr;
+                    </a>
+                </div>
+
+                <form class="space-y-6" onsubmit="return submitForm(event)">
+                    <div>
+                        <label for="name" class="block text-lg font-medium text-dark-text mb-2">Your Name</label>
+                        <input type="text" id="name" name="name" required
+                               class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-lg font-medium text-dark-text mb-2">Email Address</label>
+                        <input type="email" id="email" name="email" required
+                               class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="service" class="block text-lg font-medium text-dark-text mb-2">Service Needed</label>
+                            <select id="service" name="service"
+                                    class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm">
+                                <option class="bg-gray-100">Family Session</option>
+                                <option class="bg-gray-100">Maternity/Newborn</option>
+                                <option class="bg-gray-100">Graduation/Senior</option>
+                                <option class="bg-gray-100">Professional Portrait</option>
+                                <option class="bg-gray-100">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="preferred_date" class="block text-lg font-medium text-dark-text mb-2">Preferred Date</label>
+                            <input type="date" id="preferred_date" name="preferred_date" required
+                                   class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="message" class="block text-lg font-medium text-dark-text mb-2">Additional Details (Time, Location, etc.)</label>
+                        <textarea id="message" name="message" rows="4" required
+                                  class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm"></textarea>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full px-6 py-4 text-xl font-bold bg-accent-gold text-dark-text rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-[1.02] cursor-pointer">
+                        Submit Booking Request
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-secondary-bg border-t border-gray-300 py-8 px-4 md:px-12">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+            <p>&copy; 2025 Dana Valdez Photography. All rights reserved.</p>
+            <div class="flex space-x-6 mt-4 md:mt-0">
+                <a href="#" class="hover:text-accent-gold transition duration-200" aria-label="Instagram">
+                    <!-- Placeholder for Instagram Icon (using simple text/SVG idea) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+                <a href="#" class="hover:text-accent-gold transition duration-200" aria-label="Facebook">
+                    <!-- Placeholder for Facebook Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                </a>
+                <a href="mailto:info@danavaldezphoto.com" class="hover:text-accent-gold transition duration-200" aria-label="Email">
+                    <!-- Placeholder for Email Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Success Modal Structure -->
+    <div id="success-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="text-green-600 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mx-auto">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15l4.5-4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+            </div>
+            <h3 class="text-3xl font-bold mb-3 text-dark-text">Request Sent!</h3>
+            <p class="text-lg text-gray-700 mb-6">Thank you for submitting your booking request. We will review your preferred date and get back to you within 24 hours to confirm the details!</p>
+            <button onclick="closeModal()" class="px-6 py-3 text-lg font-semibold bg-accent-gold text-dark-text rounded-lg hover:bg-yellow-600 transition duration-300">
+                Close
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Function to handle form submission
+        function submitForm(event) {
+            event.preventDefault(); // Stop the default form submission (which would reload the page)
+
+            // NOTE: To make this form truly functional, you need to configure a server-side handler (like Netlify Forms, Formspree, or a custom script) to process this data. The data is currently only logged to the console.
+
+            console.log("Form data collected. Submitting request...");
+            
+            // Clear the form fields (optional)
+            event.target.reset();
+
+            // Show the custom success modal
+            document.getElementById('success-modal').style.display = 'flex';
+            
+            return false; // Prevent traditional form submission
+        }
+
+        // Function to close the custom modal
+        function closeModal() {
+            document.getElementById('success-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
