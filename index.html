@@ -22,11 +22,11 @@
             position: fixed; /* Keeps the logo fixed while the content scrolls */
             top: 0;
             left: 0;
-            width: 1000%;
-            height: 1000%;
+            width: 100%;
+            height: 100%;
             /* Use the new logo file for the watermark */
             background-image: url('1.png');
-            background-repeat: repeat;
+            background-repeat: no-repeat;
             background-position: center center;
             background-size: 80%; /* Makes the logo large */
             opacity: 0.08; /* Low opacity for the subtle watermark effect */
@@ -34,6 +34,24 @@
             pointer-events: none; /* Ensures the logo doesn't block clicks/selection */
         }
         /* ---------------------------------- */
+        
+        /* --- Hero Section Specific Logo Layer --- */
+        #home::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('1.png');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 50%; 
+            opacity: 0.15;
+            z-index: 5; /* Above background/overlay, below text */
+            pointer-events: none;
+        }
+        /* ---------------------------------------- */
 
 
         /* Ensure image dimensions are handled gracefully */
@@ -320,9 +338,10 @@
                 <h2 class="text-5xl font-extrabold text-center mb-4 text-dark-text">Our <span class="text-accent-gold">Philosophy</span></h2>
                 <div class="md:flex md:space-x-12 items-center">
                     <div class="md:w-1/2 mb-6 md:mb-0">
-                        <img src="https://placehold.co/800x600/f0f0f0/d9a400?text=TEAM+PHOTO" 
-                             alt="Team Profile Photo" 
-                             class="rounded-xl shadow-xl w-full border border-gray-200" 
+                        <!-- UPDATED: Replaced placeholder with user-provided image -->
+                        <img src="IMG_9966.jpg" 
+                             alt="Dana Valdez Profile Photo" 
+                             class="rounded-xl shadow-xl w-full border border-gray-200 object-cover" 
                              onerror="this.style.backgroundColor='#ccc'">
                     </div>
                     <div class="md:w-1/2">
@@ -333,7 +352,7 @@
                             Our style is **warm, emotive, and naturally lit**. We focus exclusively on the beauty of human connection and personal achievements, dedicated to delivering images that become family heirlooms.
                         </p>
                         <a href="#contact" class="mt-6 inline-block text-accent-gold text-lg font-semibold hover:text-dark-text transition duration-300 border-b border-accent-gold pb-1 cursor-pointer">
-                            Meet Dana &rarr;
+                            Book Your Session &rarr;
                         </a>
                     </div>
                 </div>
@@ -780,7 +799,7 @@
 
             // Display success message
             messageBox.textContent = `Thank you, ${data.clientName}! Your booking for a ${data.sessionLength} ${data.sessionType} session on ${data.sessionDate} with a retainer of $${data.retainerFee} is confirmed. We will reach out shortly.`;
-            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+            messageBox.classList.remove('hidden', 'bg-red-100', 'text-green-700');
             messageBox.classList.add('bg-green-100', 'text-green-700', 'block');
 
             // Log data to console (simulating sending data to server/database)
@@ -794,5 +813,3 @@
 
 </body>
 </html>
-
-
