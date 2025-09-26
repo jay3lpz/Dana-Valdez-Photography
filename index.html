@@ -13,8 +13,29 @@
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
+            position: relative; /* Required for the fixed background watermark */
         }
         
+        /* --- Watermark Background Logo --- */
+        body::before {
+            content: '';
+            position: fixed; /* Keeps the logo fixed while the content scrolls */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Use the new logo file for the watermark */
+            background-image: url('1.png');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 80%; /* Makes the logo large */
+            opacity: 0.08; /* Low opacity for the subtle watermark effect */
+            z-index: -1; /* Puts it behind all content */
+            pointer-events: none; /* Ensures the logo doesn't block clicks/selection */
+        }
+        /* ---------------------------------- */
+
+
         /* Ensure image dimensions are handled gracefully */
         .gallery-item img {
             width: 100%;
@@ -44,36 +65,68 @@
             transform: translateY(-5px);
         }
 
-        /* Styles for the Custom Success Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.75);
-            display: none; /* Hidden by default */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        /* Styles for the Contract Scrollbar (taken from user-provided code) */
+        .agreement-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .agreement-box::-webkit-scrollbar-thumb {
+            background-color: #d1d5db; /* gray-300 */
+            border-radius: 4px;
+        }
+        .agreement-box::-webkit-scrollbar-track {
+            background-color: #f3f4f6; /* gray-100 */
+        }
+        
+        /* Custom signature font style (optional) */
+        .font-signature {
+            font-family: cursive, sans-serif;
         }
 
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 12px;
+        /* --- NEW Calendar Styles --- */
+        .calendar-container {
+            max-width: 100%;
+            user-select: none;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            font-size: 0.8rem;
+        }
+        .date-cell {
+            padding: 8px 0;
             text-align: center;
-            max-width: 90%;
-            width: 400px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            animation: popIn 0.3s ease-out;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            border-radius: 4px;
         }
-
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .date-cell.day-name {
+            font-weight: 600;
+            color: #222222; /* dark-text */
+            background-color: #f0f0f0; /* secondary-bg */
+            cursor: default;
         }
-
+        .date-cell.current-month:hover:not(.day-name):not(.unavailable):not(.selected):not(.past) {
+            background-color: #fff8e1; /* subtle hover */
+            transform: scale(1.05);
+        }
+        .date-cell.selected {
+            background-color: #d9a400; /* accent-gold */
+            color: #222222; /* dark-text */
+            font-weight: bold;
+        }
+        .date-cell.unavailable {
+            color: #ccc;
+            text-decoration: line-through;
+            cursor: not-allowed;
+            background-color: #fafafa;
+        }
+        .date-cell.past {
+            color: #aaa;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+        /* --------------------------- */
     </style>
     <!-- Tailwind Configuration for custom colors -->
     <script>
@@ -251,7 +304,7 @@
                         <div class="text-accent-gold mb-4">
                              <!-- Icon for Graduation/Education (book icon) -->
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21l-8-5v-10l8 5 8-5v10l-8 5zM3.75 6.75l8.25 5.25 8.25-5.25m-16.5-3.75L12 12l8.25-5.25V4.5L12 9.75 3.75 4.5v2.25z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21l-8-5v-10l8 5 8-5v10l-8 5zM3.75 6.75l8.25 5.25 8.25-5.25V4.5L12 9.75 3.75 4.5v2.25z" />
                             </svg>
                         </div>
                         <h3 class="text-3xl font-bold mb-4 text-dark-text">Graduation & Senior Milestones</h3>
@@ -313,67 +366,195 @@
             </div>
         </section>
 
-        <!-- 6. Contact/Scheduling Section -->
+        <!-- 6. Contact/SCHEDULING AGREEMENT Section (Updated) -->
         <section id="contact" class="py-20 bg-white px-4 md:px-12">
             <div class="container mx-auto max-w-4xl">
-                <h2 class="text-5xl font-extrabold text-center mb-4 text-dark-text">Request Your <span class="text-accent-gold">Booking</span></h2>
-                <p class="text-center text-xl text-gray-600 mb-8">
-                    Use the form below to submit a **session request** with your preferred date.
-                    For instant scheduling and live availability, you can use our direct booking tool:
-                </p>
 
-                <!-- Dedicated Booking Link (Placeholder for Calendly/Acuity) -->
-                <div class="text-center mb-12">
-                    <a href="#" target="_blank" 
-                       class="inline-block px-8 py-4 text-xl font-bold bg-dark-text text-white rounded-xl shadow-lg hover:bg-gray-800 transition duration-300 transform hover:scale-[1.03] cursor-pointer border border-accent-gold">
-                        Instant Booking Link (External Scheduler) &rarr;
-                    </a>
-                </div>
+                <header class="text-center mb-8">
+                    <h2 class="text-5xl font-extrabold text-dark-text">Secure Your <span class="text-accent-gold">Session</span> & Agreement</h2>
+                    <p class="text-xl text-gray-600 mt-2">Finalize your booking details and sign the service contract below.</p>
+                </header>
 
-                <form class="space-y-6" onsubmit="return submitForm(event)">
-                    <div>
-                        <label for="name" class="block text-lg font-medium text-dark-text mb-2">Your Name</label>
-                        <input type="text" id="name" name="name" required
-                               class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-lg font-medium text-dark-text mb-2">Email Address</label>
-                        <input type="email" id="email" name="email" required
-                               class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm">
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="service" class="block text-lg font-medium text-dark-text mb-2">Service Needed</label>
-                            <select id="service" name="service"
-                                    class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm">
-                                <option class="bg-gray-100">Family Session</option>
-                                <option class="bg-gray-100">Maternity/Newborn</option>
-                                <option class="bg-gray-100">Graduation/Senior</option>
-                                <option class="bg-gray-100">Professional Portrait</option>
-                                <option class="bg-gray-100">Other</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="preferred_date" class="block text-lg font-medium text-dark-text mb-2">Preferred Date</label>
-                            <input type="date" id="preferred_date" name="preferred_date" required
-                                   class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm">
-                        </div>
-                    </div>
+                <!-- Form Start -->
+                <form id="bookingForm" class="space-y-8">
                     
-                    <div>
-                        <label for="message" class="block text-lg font-medium text-dark-text mb-2">Additional Details (Time, Location, etc.)</label>
-                        <textarea id="message" name="message" rows="4" required
-                                  class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-accent-gold text-dark-text shadow-sm"></textarea>
+                    <!-- SECTION 1: Client Information -->
+                    <section class="p-6 bg-secondary-bg rounded-lg border border-accent-gold/50">
+                        <h2 class="text-2xl font-semibold text-dark-text mb-4">1. Client & Session Details</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Client Name -->
+                            <div>
+                                <label for="clientName" class="block text-sm font-medium text-gray-700">Client Full Name</label>
+                                <input type="text" id="clientName" name="clientName" required
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:ring-accent-gold focus:border-accent-gold transition duration-150 text-dark-text">
+                            </div>
+                            <!-- Email -->
+                            <div>
+                                <label for="clientEmail" class="block text-sm font-medium text-gray-700">Email Address</label>
+                                <input type="email" id="clientEmail" name="clientEmail" required
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:ring-accent-gold focus:border-accent-gold transition duration-150 text-dark-text">
+                            </div>
+                            <!-- Phone -->
+                            <div>
+                                <label for="clientPhone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                                <input type="tel" id="clientPhone" name="clientPhone" 
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:ring-accent-gold focus:border-accent-gold transition duration-150 text-dark-text">
+                            </div>
+                            
+                            <!-- Session Type (For categorization) -->
+                            <div>
+                                <label for="sessionType" class="block text-sm font-medium text-gray-700">Type of Session</label>
+                                <select id="sessionType" name="sessionType" required
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:ring-accent-gold focus:border-accent-gold transition duration-150 text-dark-text bg-white">
+                                    <option value="Family Session">Family Session</option>
+                                    <option value="Maternity/Newborn">Maternity/Newborn</option>
+                                    <option value="Graduation/Senior">Graduation/Senior</option>
+                                    <option value="Professional Portrait">Professional Portrait</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <!-- Session Length/Package (Controls Pricing) -->
+                            <div class="md:col-span-2">
+                                <label for="sessionLength" class="block text-sm font-medium text-gray-700">Session Length/Package</label>
+                                <select id="sessionLength" name="sessionLength" required
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:ring-accent-gold focus:border-accent-gold transition duration-150 text-dark-text bg-white font-semibold">
+                                    <!-- New 30-minute options -->
+                                    <option value="30min-mini">30 Min Mini Portrait ($75.00)</option>
+                                    <option value="30min-express">30 Min Express Session ($85.00)</option>
+                                    <!-- 1 Hour options -->
+                                    <option value="1hr-full">1 Hour Full Session ($150.00)</option>
+                                    <option value="1hr-premium">1 Hour Premium Package ($200.00)</option>
+                                </select>
+                            </div>
+
+                            <!-- Preferred Date & Calendar (REPLACED INPUT FIELD) -->
+                            <div class="md:col-span-2">
+                                <label for="sessionDate" class="block text-sm font-medium text-gray-700">Preferred Session Date (Selected: <span id="selectedDateDisplay" class="font-bold text-accent-gold">None</span>)</label>
+                                
+                                <!-- Hidden input field to hold the actual date value for form submission -->
+                                <input type="hidden" id="sessionDate" name="sessionDate" required>
+
+                                <div class="mt-2 p-4 bg-white rounded-lg shadow-inner border border-gray-200 calendar-container">
+                                    
+                                    <!-- Month Navigation -->
+                                    <div class="flex justify-between items-center mb-4 text-dark-text">
+                                        <button type="button" id="prevMonth" class="p-2 rounded-full hover:bg-secondary-bg transition duration-150 text-accent-gold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                                        </button>
+                                        <h3 id="currentMonthYear" class="text-xl font-bold">Month Year</h3>
+                                        <button type="button" id="nextMonth" class="p-2 rounded-full hover:bg-secondary-bg transition duration-150 text-accent-gold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Calendar Grid -->
+                                    <div id="calendarGrid" class="calendar-grid">
+                                        <!-- Content injected by JavaScript -->
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-xs text-gray-500">Dates shown are generally available, but final availability is confirmed only after agreement signing and retainer fee payment.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SECTION 2: Payment Summary -->
+                    <section class="p-6 bg-secondary-bg rounded-lg border border-accent-gold">
+                        <h2 class="text-2xl font-semibold text-dark-text mb-4">2. Fee Summary (Estimated)</h2>
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-lg text-gray-700">
+                                <span>Total Session Fee (Est.):</span>
+                                <span class="font-bold text-dark-text">$<span id="totalFeeDisplay">75.00</span></span>
+                            </div>
+                            <div class="flex justify-between text-lg text-accent-gold font-semibold">
+                                <span>Non-Refundable 15% Retainer Fee:</span>
+                                <span class="font-bold">$<span id="retainerFeeDisplay">11.25</span></span>
+                            </div>
+                            <p class="text-sm text-dark-text italic pt-2">
+                                This 15% Retainer is required to secure your date and is non-refundable upon cancellation (Section III.B).
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- SECTION 3: Contract Text (Scrollable) -->
+                    <section class="p-6 bg-secondary-bg rounded-lg border border-gray-300">
+                        <h2 class="text-2xl font-semibold text-dark-text mb-4">3. Agreement Terms (Read Carefully)</h2>
+                        
+                        <div class="agreement-box h-96 overflow-y-scroll p-4 border border-gray-300 rounded-lg bg-white text-sm text-gray-700 leading-relaxed shadow-inner">
+                            <!-- CONTRACT CONTENT INJECTED HERE -->
+                            <h1 class="text-xl font-bold mb-4 text-dark-text">PHOTOGRAPHY SERVICE AND MODEL RELEASE AGREEMENT</h1>
+                            <p>This Photography Service and Model Release Agreement (the "Agreement") is entered into as of the date of signing, by and between the Photographer (Dana Valdez Photography) and the Client.</p>
+                            
+                            <h3 class="text-lg font-semibold mt-4 mb-2 text-dark-text">I. PARTIES</h3>
+                            <p>1. **PHOTOGRAPHER:** Dana Valdez Photography</p>
+                            <p>2. **CLIENT:** Details to be provided in the form fields.</p>
+
+                            <h3 class="text-lg font-semibold mt-4 mb-2 text-dark-text">II. SESSION DETAILS</h3>
+                            <p>Details will be confirmed upon booking via email communication.</p>
+
+                            <h3 class="text-lg font-semibold mt-4 mb-2 text-dark-text">III. PAYMENT TERMS AND BOOKING FEE</h3>
+                            <p>A. **Total Fee:** Client agrees to pay the Total Session Fee for the services (estimated above).</p>
+                            <p>B. **Non-Refundable Booking Fee (Retainer):** To secure the date, Client shall pay a non-refundable booking fee (Retainer) equal to **fifteen percent (15%)** of the Total Session Fee upon signing. **This amount is non-refundable, even if the Client cancels for any reason.**</p>
+                            <p>C. **Balance Payment:** The remaining balance is due prior to the Session Date.</p>
+
+                            <h3 class="text-lg font-semibold mt-4 mb-2 text-dark-text">IV. IMAGE USE AND MODEL RELEASE (ADVERTISING RIGHTS) - CRITICAL</h3>
+                            <p>A. **Photographer’s Promotional Use:** The Client grants the Photographer the irrevocable and unrestricted right to use and publish photographs produced from the Session, including the Client’s likeness, for editorial, trade, marketing, and advertising purposes. This includes use in the Photographer’s **Professional Portfolio, Website, Social Media Channels, and Promotional Materials.** The Client releases the Photographer from all claims related to the publication or alteration of the photos.</p>
+                            <p>B. **Client’s Use:** Client is granted a personal, non-commercial license for the final digital files.</p>
+
+                            <h3 class="text-lg font-semibold mt-4 mb-2 text-dark-text">V. CANCELLATION AND RESCHEDULING</h3>
+                            <p>If the Client requests to cancel, the Retainer (15% booking fee) will be forfeited. If the Photographer cancels due to unforeseen circumstances, the Total Session Fee, including the Retainer, will be refunded.</p>
+
+                            <h3 class="text-lg font-semibold mt-4 mb-2 text-dark-text">VI. COPYRIGHT</h3>
+                            <p>The Photographer retains the copyright to all images. Alteration or editing of the images by the Client (including filters or cropping) is strictly prohibited.</p>
+
+                            <h3 class="text-lg font-semibold mt-4 mb-2 text-dark-text">VII. ACCEPTANCE</h3>
+                            <p>By signing this Agreement, the Parties acknowledge that they have read, understand, and agree to the terms and conditions.</p>
+                            <!-- END CONTRACT CONTENT -->
+                        </div>
+                    </section>
+
+                    <!-- SECTION 4: Acceptance and E-Signature -->
+                    <section class="p-6 bg-secondary-bg rounded-lg border border-accent-gold/70">
+                        <h2 class="text-2xl font-semibold text-dark-text mb-4">4. Final Acceptance & Signature</h2>
+                        
+                        <!-- Mandatory Acceptance Checkbox -->
+                        <div class="flex items-start mb-6 p-4 bg-white rounded-lg border border-accent-gold">
+                            <input id="acceptTerms" type="checkbox" required
+                                   class="w-5 h-5 text-accent-gold bg-gray-100 border-gray-300 rounded focus:ring-accent-gold mt-1 cursor-pointer">
+                            <label for="acceptTerms" class="ml-3 text-lg font-medium text-dark-text">
+                                I have read, understood, and agree to all terms of the Agreement, including the **non-refundable 15% booking fee** and the **unrestricted use of my likeness** by the Photographer for advertising and promotional purposes (Section IV.A).
+                            </label>
+                        </div>
+                        
+                        <!-- Simulated E-Signature -->
+                        <div class="space-y-4">
+                            <h3 class="text-xl font-medium text-dark-text">Client Electronic Signature</h3>
+                            <label for="clientSignature" class="block text-sm font-medium text-gray-700">Type your full name to sign electronically:</label>
+                            <input type="text" id="clientSignature" name="clientSignature" required
+                                   class="mt-1 block w-full md:w-1/2 rounded-md border-gray-300 shadow-sm p-3 border text-2xl font-signature italic border-dashed focus:ring-accent-gold focus:border-accent-gold transition duration-150 text-dark-text"
+                                   placeholder="Type your name here to sign">
+                            <p class="text-xs text-gray-500">By typing your name, you are executing this document as an electronic signature under applicable law.</p>
+                        </div>
+                    </section>
+
+                    <!-- Submit Button -->
+                    <div class="pt-6">
+                        <button type="submit"
+                                class="w-full py-4 px-6 border border-transparent rounded-xl shadow-xl text-xl font-bold text-dark-text bg-accent-gold hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-accent-gold focus:ring-opacity-50 transition duration-300 transform hover:scale-[1.01] active:scale-[0.99] cursor-pointer">
+                            Confirm Booking & Sign Agreement
+                        </button>
                     </div>
-                    
-                    <button type="submit" 
-                            class="w-full px-6 py-4 text-xl font-bold bg-accent-gold text-dark-text rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-[1.02] cursor-pointer">
-                        Submit Booking Request
-                    </button>
+
+                    <!-- Inline Message Box (Replaces old modal) -->
+                    <div id="messageBox" class="mt-4 p-4 text-center hidden rounded-xl shadow-inner text-lg" role="alert"></div>
+
                 </form>
+                <!-- Form End -->
+
             </div>
         </section>
+        <!-- End of Contact/Scheduling Section -->
 
     </main>
 
@@ -398,44 +579,219 @@
         </div>
     </footer>
 
-    <!-- Custom Success Modal Structure -->
-    <div id="success-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="text-green-600 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mx-auto">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15l4.5-4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-            </div>
-            <h3 class="text-3xl font-bold mb-3 text-dark-text">Request Sent!</h3>
-            <p class="text-lg text-gray-700 mb-6">Thank you for submitting your booking request. We will review your preferred date and get back to you within 24 hours to confirm the details!</p>
-            <button onclick="closeModal()" class="px-6 py-3 text-lg font-semibold bg-accent-gold text-dark-text rounded-lg hover:bg-yellow-600 transition duration-300">
-                Close
-            </button>
-        </div>
-    </div>
     
     <script>
-        // Function to handle form submission
-        function submitForm(event) {
-            event.preventDefault(); // Stop the default form submission (which would reload the page)
+        // --- Dynamic Fee Calculation Logic ---
+        // Fee map now uses the Session Length/Package value to determine the price
+        const feeMap = {
+            "30min-mini": 75.00,
+            "30min-express": 85.00, 
+            "1hr-full": 150.00,
+            "1hr-premium": 200.00    
+        };
 
-            // NOTE: To make this form truly functional, you need to configure a server-side handler (like Netlify Forms, Formspree, or a custom script) to process this data. The data is currently only logged to the console.
-
-            console.log("Form data collected. Submitting request...");
+        function updateFees() {
+            // Retrieve value from the new sessionLength dropdown
+            const sessionLength = document.getElementById('sessionLength').value;
             
-            // Clear the form fields (optional)
-            event.target.reset();
+            // Get the total fee based on the selected package
+            const totalFee = feeMap[sessionLength] || 0.00; 
+            const retainerRate = 0.15; // 15%
+            const retainerFee = totalFee * retainerRate;
 
-            // Show the custom success modal
-            document.getElementById('success-modal').style.display = 'flex';
-            
-            return false; // Prevent traditional form submission
+            // Update UI elements with new fees, formatted to two decimal places
+            document.getElementById('totalFeeDisplay').textContent = totalFee.toFixed(2);
+            document.getElementById('retainerFeeDisplay').textContent = retainerFee.toFixed(2);
         }
 
-        // Function to close the custom modal
-        function closeModal() {
-            document.getElementById('success-modal').style.display = 'none';
+        // Run on page load and attach listener
+        updateFees(); // Set initial fees based on the default selected option (30 Min Mini Portrait)
+        // Listen for changes on the sessionLength dropdown
+        document.getElementById('sessionLength').addEventListener('change', updateFees);
+
+
+        // --- NEW Calendar and Scheduling Logic ---
+
+        const calendarGrid = document.getElementById('calendarGrid');
+        const currentMonthYear = document.getElementById('currentMonthYear');
+        const sessionDateInput = document.getElementById('sessionDate');
+        const selectedDateDisplay = document.getElementById('selectedDateDisplay');
+        const messageBox = document.getElementById('messageBox');
+
+        let currentDate = new Date();
+        let selectedCell = null;
+
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        
+        // Simulates availability: Weekends (Sat/Sun) are unavailable for sessions
+        // In a real app, this data would come from a backend/API.
+        function isDayAvailable(date) {
+            const day = date.getDay(); // 0 = Sunday, 6 = Saturday
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // 1. Check if the date is in the past
+            // We use toISOString().substring(0, 10) for comparison to ignore time
+            if (date.toISOString().substring(0, 10) < today.toISOString().substring(0, 10)) {
+                return { available: false, past: true };
+            }
+
+            // 2. Check for simulated weekend unavailability (Sun/Sat)
+            if (day === 0 || day === 6) { 
+                return { available: false, past: false };
+            }
+            
+            // 3. All other dates are available
+            return { available: true, past: false };
         }
+
+
+        function generateCalendar(year, month) {
+            calendarGrid.innerHTML = '';
+            
+            // 1. Set Month/Year Header
+            const date = new Date(year, month);
+            const monthName = date.toLocaleString('default', { month: 'long' });
+            currentMonthYear.textContent = `${monthName} ${year}`;
+
+            // 2. Add Day Names
+            daysOfWeek.forEach(day => {
+                const cell = document.createElement('div');
+                cell.className = 'date-cell day-name';
+                cell.textContent = day;
+                calendarGrid.appendChild(cell);
+            });
+
+            // 3. Calculate start/end dates
+            const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0-6
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // 4. Add empty cells for padding
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'date-cell';
+                calendarGrid.appendChild(cell);
+            }
+
+            // 5. Add date cells
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDate = new Date(year, month, day);
+                const availability = isDayAvailable(dayDate);
+                
+                const cell = document.createElement('div');
+                cell.textContent = day;
+                cell.className = 'date-cell current-month border border-gray-100';
+                
+                // Format date as YYYY-MM-DD for the form value
+                cell.dataset.date = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                if (!availability.available) {
+                    cell.classList.add(availability.past ? 'past' : 'unavailable');
+                    cell.onclick = (e) => {
+                         // Simple message box to inform user why the date is blocked
+                         messageBox.textContent = availability.past 
+                            ? "This date is in the past and cannot be selected."
+                            : "This day is reserved or unavailable. Please choose another date.";
+                         messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+                         messageBox.classList.add('bg-red-100', 'text-red-700', 'block');
+                         // Hide the message box after 3 seconds
+                         setTimeout(() => messageBox.classList.add('hidden'), 3000);
+                    };
+
+                } else {
+                    cell.onclick = handleDateSelect;
+                }
+
+                calendarGrid.appendChild(cell);
+            }
+        }
+        
+        function handleDateSelect(event) {
+            const newSelectedCell = event.target;
+            const dateString = newSelectedCell.dataset.date;
+            
+            // Clear previous selection
+            if (selectedCell) {
+                selectedCell.classList.remove('selected');
+            }
+
+            // Set new selection
+            newSelectedCell.classList.add('selected');
+            selectedCell = newSelectedCell;
+
+            // Update hidden input and display text
+            sessionDateInput.value = dateString;
+            selectedDateDisplay.textContent = new Date(dateString + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+            
+            // Hide any previous error message
+            document.getElementById('messageBox').classList.add('hidden');
+        }
+
+        // --- Navigation Handlers ---
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+        // Initialize calendar on load
+        generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        
+        // --- Form Submission Logic (Existing Code) ---
+        document.getElementById('bookingForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            
+            // Check if a date has been selected from the calendar
+            if (!sessionDateInput.value) {
+                messageBox.textContent = `Please select a date from the calendar.`;
+                messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+                messageBox.classList.add('bg-red-100', 'text-red-700', 'block');
+                return;
+            }
+
+            // Collect all data from the contract form
+            const data = {
+                clientName: form.clientName.value,
+                clientEmail: form.clientEmail.value,
+                clientPhone: form.clientPhone.value,
+                sessionType: form.sessionType.value, // Categorization
+                sessionLength: form.sessionLength.value, // Pricing package
+                sessionDate: form.sessionDate.value,
+                clientSignature: form.clientSignature.value,
+                agreedToTerms: form.acceptTerms.checked,
+                totalFee: document.getElementById('totalFeeDisplay').textContent,
+                retainerFee: document.getElementById('retainerFeeDisplay').textContent
+            };
+
+            
+            // Validation check
+            if (!data.agreedToTerms || !data.clientSignature) {
+                messageBox.textContent = `Please read and electronically sign the agreement before confirming.`;
+                messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+                messageBox.classList.add('bg-red-100', 'text-red-700', 'block');
+                return;
+            }
+
+
+            // Display success message
+            messageBox.textContent = `Thank you, ${data.clientName}! Your booking for a ${data.sessionLength} ${data.sessionType} session on ${data.sessionDate} with a retainer of $${data.retainerFee} is confirmed. We will reach out shortly.`;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+            messageBox.classList.add('bg-green-100', 'text-green-700', 'block');
+
+            // Log data to console (simulating sending data to server/database)
+            console.log("--- Contract & Booking Data Submitted ---");
+            console.log(data);
+            console.log("-----------------------------------------");
+            
+            // form.reset(); // Optionally reset the form after successful submission
+        });
     </script>
+
 </body>
 </html>
+
